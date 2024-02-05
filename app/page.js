@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 
@@ -18,15 +16,20 @@ function BookAnimation() {
 
 export default function Home() {
   const [userMessage, setUserMessage] = useState("");
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([
+    {
+      sender: "CITE-BOT",
+      message:
+        "Hi, I am Citebot. Ask me any medical questions and I’ll try to answer them with citations of what I’ve learned.",
+      animation: false,
+    },
+  ]);
   const chatboxRef = useRef(null);
 
   async function promptGPT(text) {
-    // Immediately add the user's message
     setMessages((prevMessages) => [
       ...prevMessages,
       { sender: "User", message: text },
-      // Add a temporary message with the BookAnimation as 'thinking' state
       { sender: "CITE-BOT", message: "Thinking...", animation: true },
     ]);
 
@@ -40,16 +43,14 @@ export default function Home() {
       });
       if (response.status === 200) {
         const data = await response.json();
-        // Use setTimeout to wait for 10 seconds
         setTimeout(() => {
-          // Remove the temporary 'thinking' message and add the GPT response
           setMessages((prevMessages) => [
             ...prevMessages.filter(
               (msg, index) => index !== prevMessages.length - 1
-            ), // This removes the last message (the temporary one)
+            ),
             { sender: "CITE-BOT", message: data.result, animation: false },
           ]);
-        }, 5000); // 10000 milliseconds = 10 seconds
+        }, 5000); // Adjust this to change the delay as needed
       } else {
         throw new Error(`Request failed with status ${response.status}`);
       }
@@ -62,7 +63,6 @@ export default function Home() {
     e.preventDefault();
     const trimmedMessage = userMessage.trim();
     if (trimmedMessage) {
-      // Call the GPT API with the user's message and wait for the response
       promptGPT(trimmedMessage);
     }
     setUserMessage("");
@@ -89,7 +89,7 @@ export default function Home() {
       >
         {messages.map((msg, index) => (
           <div key={index} className="text-left w-full mb-2 text-black">
-            <strong>{msg.sender}</strong>
+            <strong>{msg.sender}:</strong>
             {msg.animation ? (
               <div className="pt-2">
                 <BookAnimation />
