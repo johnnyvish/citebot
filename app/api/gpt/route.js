@@ -32,7 +32,7 @@ async function fetchExaApiData(text) {
 }
 
 async function postToGptApi(results, inputText) {
-  const promptText = `You are the LLM backend of a product called CiteBot. Citebot searches academic research from the user query and pulls out the highlights from the data of those papers. Your job is to take the search engine data and write a response doing the following:
+  const promptText = `You are the LLM backend of a product called CiteBot. Citebot searches academic research from the user query and pulls out the highlights from the data of those papers. Your job is to take the search engine data and write a response doing the following (do not use markdown):
 
   1) Write a summary of all the highlights with the objective of answering the user's query in mind.
   2) Suggest a potential solution to the problem so far based on all the source data.
