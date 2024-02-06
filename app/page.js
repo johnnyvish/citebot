@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
-import ReactMarkdown from "react-markdown";
 
 function BookAnimation() {
   return (
@@ -57,7 +56,7 @@ export default function Home() {
         if (match && depth < 1) {
           // Extract the message within `<< >>` and send it as a new query with incremented depth
           const newQuery = match[1];
-          setTimeout(() => promptGPT(newQuery, depth + 1), 1000); // Delay the recursive call if needed
+          promptGPT(newQuery, depth + 1);
         } else {
           // Update the UI with the API response
           setTimeout(() => {
@@ -68,7 +67,7 @@ export default function Home() {
               ),
               { sender: "CITE-BOT", message: data.result, animation: false },
             ]);
-          }, 1000);
+          }, 50);
         }
       } else {
         throw new Error(`Request failed with status ${response.status}`);
@@ -93,10 +92,6 @@ export default function Home() {
     }
   }, [messages]);
 
-  function MarkdownRenderer({ markdownText }) {
-    return <ReactMarkdown>{markdownText}</ReactMarkdown>;
-  }
-
   return (
     <main className="flex min-h-screen flex-col items-center p-4 bg-[#e2dac2]">
       <Image
@@ -118,7 +113,7 @@ export default function Home() {
                 <BookAnimation />
               </div>
             ) : (
-              <ReactMarkdown>{msg.message}</ReactMarkdown>
+              <div>{msg.message}</div>
             )}
           </div>
         ))}
@@ -126,14 +121,14 @@ export default function Home() {
       <form className="w-full flex justify-center mt-8" onSubmit={sendMessage}>
         <textarea
           id="userMessage"
-          className="bg-[#c1b17d] h-[140px] w-[540px] rounded-2xl p-4"
+          className="bg-[#d1c59f] h-[140px] w-[540px] rounded-2xl p-4 placeholder-black"
           placeholder="Write a message..."
           value={userMessage}
           onChange={(e) => setUserMessage(e.target.value)}
         />
         <button
           type="submit"
-          className="ml-2 text-white text-[2.5rem] font-bold py-2 px-4 rounded-2xl"
+          className="ml-2 text-black text-[2.5rem] font-bold py-2 px-4 rounded-2xl"
         >
           ^
         </button>
