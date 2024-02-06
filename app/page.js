@@ -26,7 +26,6 @@ export default function Home() {
       animation: false,
     },
   ]);
-
   const chatboxRef = useRef(null);
 
   async function promptGPT(text) {
@@ -98,7 +97,7 @@ export default function Home() {
                 <BookAnimation />
               </div>
             ) : (
-              <div>{msg.message}</div>
+              <p>{msg.message}</p>
             )}
           </div>
         ))}

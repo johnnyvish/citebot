@@ -20,7 +20,7 @@ async function fetchExaApiData(text) {
         "bmj.com",
         "sciencedirect.com",
       ],
-      highlights: { highlights_per_url: 2 },
+      highlights: { num_sentences: 4, highlights_per_url: 2 },
     });
 
     return res;
@@ -39,6 +39,8 @@ async function postToGptApi(results, inputText) {
   4) Else, cite all the sources.
   `;
 
+  console.log("gpt reached");
+
   const response = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
     messages: [
@@ -49,6 +51,8 @@ async function postToGptApi(results, inputText) {
       },
     ],
   });
+
+  console.log("gpt success");
 
   return response.choices[0].message.content;
 }
@@ -75,10 +79,7 @@ export async function POST(request) {
         return `Result ${index + 1}:
       Title: ${item.title}
       URL: ${item.url}
-      Published Date: ${item.publishedDate}
-      Author: ${item.author || "Unknown"}
-      ID: ${item.id}
-      Score: ${item.score.toFixed(3)}
+
   ${highlightsFormatted}`;
       })
       .join("\n\n");
