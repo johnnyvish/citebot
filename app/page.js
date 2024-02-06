@@ -87,7 +87,7 @@ export default function Home() {
       />
       <div
         ref={chatboxRef}
-        className="flex flex-col justify-start items-start bg-[#d1c59f] h-[520px] w-[85%] mt-4 rounded-2xl overflow-auto p-4"
+        className="flex flex-col justify-start items-start bg-[#d1c59f] h-[520px] w-[90%] mt-4 rounded-2xl overflow-auto p-4"
       >
         {messages.map((msg, index) => (
           <div key={index} className="text-left w-full mb-2 text-black">
@@ -122,7 +122,7 @@ export default function Home() {
         />
         <button
           type="submit"
-          className="ml-2 text-black text-[2.5rem] font-bold px-4 rounded-2xl bg-white"
+          className="ml-2 text-black text-[2.5rem] font-bold px-4 rounded-2xl bg-white shadow-2xl"
         >
           ^ <br />{" "}
         </button>
