@@ -95,12 +95,16 @@ export async function POST(request) {
 
     await connectDB();
 
+    console.log("db connected");
+
     let generation = new Generation({
-      inputText,
-      outputText,
+      inputText: inputText,
+      outputText: outputText,
     });
 
     await generation.save();
+
+    console.log("generation saved");
 
     return NextResponse.json({ result: outputText }, { status: 200 });
   } catch (error) {
