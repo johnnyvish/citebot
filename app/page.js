@@ -22,7 +22,7 @@ export default function Home() {
     {
       sender: "CITE-BOT",
       message:
-        "Hi, I am Citebot. Ask me any medical questions and I’ll try to answer them with citations of what I’ve learned.",
+        "Hi, I am Citebot. Ask me any medical questions and I’ll try to answer them with citations.",
       animation: false,
     },
   ]);
@@ -97,13 +97,17 @@ export default function Home() {
                 <BookAnimation />
               </div>
             ) : (
-              // Split message by new lines and map each line to a <p> tag or similar
-              msg.message.split("\n").map((line, idx) => (
-                <span key={idx}>
-                  {line}
-                  <br />
-                </span>
-              ))
+              <>
+                <br />{" "}
+                {/* Ensure a newline starts right after the sender's name */}
+                {/* Split message by new lines and map each line to a <p> tag or similar */}
+                {msg.message.split("\n").map((line, idx) => (
+                  // Using <div> instead of <span> for block-level separation; you can also use <p> if preferred
+                  <div key={idx} style={{ marginBottom: "0.5em" }}>
+                    {line}
+                  </div>
+                ))}
+              </>
             )}
           </div>
         ))}
