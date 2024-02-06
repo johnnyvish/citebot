@@ -97,7 +97,13 @@ export default function Home() {
                 <BookAnimation />
               </div>
             ) : (
-              <p>{msg.message}</p>
+              // Split message by new lines and map each line to a <p> tag or similar
+              msg.message.split("\n").map((line, idx) => (
+                <span key={idx}>
+                  {line}
+                  <br />
+                </span>
+              ))
             )}
           </div>
         ))}
