@@ -122,7 +122,7 @@ export default function Home() {
         />
         <button
           type="submit"
-          className="ml-2 text-black text-[2.5rem] font-bold py-2 px-4 rounded-2xl"
+          className="ml-2 text-black text-[2.5rem] font-bold px-4 rounded-2xl bg-white"
         >
           ^ <br />{" "}
         </button>
