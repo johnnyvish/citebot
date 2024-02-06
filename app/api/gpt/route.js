@@ -1,70 +1,93 @@
-// Import necessary modules
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
-import Exa from "exa-js"; // Assuming exa-js is installed and supports ES Module syntax
+import Exa from "exa-js";
 
-// Initialize OpenAI with your API key
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-// Function to fetch data from Exa API using exa-js
 async function fetchExaApiData(text) {
-  // Initialize Exa with your Exa API key
-  const exa = new Exa(process.env.EXA_API_KEY); // Use an environment variable for the Exa API key
+  const exa = new Exa(process.env.EXA_API_KEY);
 
   try {
-    // Perform a search using Exa. Adjust the search query as needed.
-    const res = await exa.search(text);
-    return res; // Adjust this based on the actual structure of Exa's response
+    const res = await exa.searchAndContents(text, {
+      numResults: 10,
+      useAutoprompt: true,
+      include_domains: [
+        "nejm.org",
+        "jamanetwork.com",
+        "thelancet.com",
+        "bmj.com",
+        "sciencedirect.com",
+      ],
+      highlights: { highlights_per_url: 2 },
+    });
+
+    return res;
   } catch (error) {
     console.error("Error fetching data from Exa API:", error);
-    throw error; // Rethrow the error to handle it in the calling function
+    throw error;
   }
 }
 
-async function postToGptApi(highlights, inputText) {
-  const promptText = `You are an AI trained in medical research analysis. Based on the following research highlights related to "${inputText}", provide a summary of the key findings and propose potential solutions or recommendations. Ensure your response includes an introduction, key highlights, and a conclusion with potential solutions. Include direct references to the article names and information.
-  
-  Highlights:
-  ${highlights}
-  
-  Summarize these findings and suggest potential solutions:`;
+async function postToGptApi(results, inputText) {
+  const promptText = `You are the LLM backend of a product called CiteBot. Citebot searches academic research from the user query and pulls out the highlights from the data of those papers. Your job is to take the search engine data and write a response in markdown doing the following:
+
+  1) Write a summary of all the highlights with the objective of answering the user's query in mind.
+  2) Suggest a potential solution to the problem so far based on all the source data.
+  3) If and only if you think that any of the 5 sources are not good, create a new iteration of the query and write your new query in the format of <<QUERY>>.
+  4) Else, cite all the sources.
+  `;
 
   const response = await openai.chat.completions.create({
     model: "gpt-4",
     messages: [
       { role: "system", content: promptText },
-      { role: "user", content: inputText },
+      {
+        role: "user",
+        content: "query: " + inputText + "data: " + results,
+      },
     ],
   });
+
+  return response.choices[0].message.content;
 }
 
-// The main POST handler for the Next.js API route
 export async function POST(request) {
   try {
     const req = await request.json();
     const inputText = req.text;
 
-    // Fetch data from Exa API
     const exaData = await fetchExaApiData(inputText);
-    console.log(exaData);
-    // Process the Exa API data as needed
-    // For example, assuming `exaData` contains a list of highlights:
-    const highlights = exaData.results
-      .map((item, index) => {
-        return `Result ${index + 1}:
-    Title: ${item.title}
-    URL: ${item.url}
-    Published Date: ${item.publishedDate}
-    Author: ${item.author || "Unknown"}
-    ID: ${item.id}
-    Score: ${item.score.toFixed(3)}\n`;
-      })
-      .join("\n");
 
-    // Now post the processed highlights to GPT API
-    const outputText = await postToGptApi(highlights, inputText);
+    const results = exaData.results
+      .map((item, index) => {
+        let highlightsFormatted = "";
+        if (item.highlights && item.highlightScores) {
+          highlightsFormatted = item.highlights
+            .map((highlight, highlightIndex) => {
+              return `    Highlight ${highlightIndex + 1}: ${highlight}
+      Highlight Score: ${item.highlightScores[highlightIndex].toFixed(3)}\n`;
+            })
+            .join("\n");
+        }
+
+        return `Result ${index + 1}:
+      Title: ${item.title}
+      URL: ${item.url}
+      Published Date: ${item.publishedDate}
+      Author: ${item.author || "Unknown"}
+      ID: ${item.id}
+      Score: ${item.score.toFixed(3)}
+  ${highlightsFormatted}`;
+      })
+      .join("\n\n");
+
+    console.log(results);
+
+    const outputText = await postToGptApi(results, inputText);
+
+    console.log(outputText);
 
     return NextResponse.json({ result: outputText }, { status: 200 });
   } catch (error) {
