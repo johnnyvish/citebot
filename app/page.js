@@ -27,17 +27,15 @@ export default function Home() {
     },
   ]);
 
+  const [counter, setCounter] = useState(0);
   const chatboxRef = useRef(null);
 
-  async function promptGPT(text, depth = 0) {
-    console.log(depth);
-    if (depth === 0) {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { sender: "User", message: text },
-        { sender: "CITE-BOT", message: "Thinking...", animation: true },
-      ]);
-    }
+  async function promptGPT(text) {
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { sender: "User", message: text },
+      { sender: "CITE-BOT", message: "Thinking...", animation: true },
+    ]);
 
     try {
       const response = await fetch("/api/gpt", {
@@ -49,29 +47,14 @@ export default function Home() {
       });
       if (response.status === 200) {
         const data = await response.json();
-
-        // Check if the response contains a pattern `<<some message>>` and ensure depth is less than 1
-        const pattern = /<<(.+?)>>/;
-        const match = pattern.exec(data.result);
-
-        console.log("match" + match);
-
-        if (match && depth < 1) {
-          // Extract the message within `<< >>` and send it as a new query with incremented depth
-          const newQuery = match[1];
-          // promptGPT(newQuery, depth + 1);
-        } else {
-          // Update the UI with the API response
-          setTimeout(() => {
-            setMessages((prevMessages) => [
-              ...prevMessages.filter(
-                (msg, index) =>
-                  index !== prevMessages.length - (depth === 0 ? 2 : 1)
-              ),
-              { sender: "CITE-BOT", message: data.result, animation: false },
-            ]);
-          }, 50);
-        }
+        setTimeout(() => {
+          setMessages((prevMessages) => [
+            ...prevMessages.filter(
+              (msg, index) => index !== prevMessages.length - 1
+            ),
+            { sender: "CITE-BOT", message: data.result, animation: false },
+          ]);
+        }, 1000); // Adjust this to change the delay as needed
       } else {
         throw new Error(`Request failed with status ${response.status}`);
       }
@@ -121,10 +104,7 @@ export default function Home() {
           </div>
         ))}
       </div>
-      <form
-        className="w-full flex justify-center mt-8 shadow-2xl"
-        onSubmit={sendMessage}
-      >
+      <form className="w-full flex justify-center mt-8" onSubmit={sendMessage}>
         <textarea
           id="userMessage"
           className="bg-[#d1c59f] h-[140px] w-[540px] rounded-2xl p-4 placeholder-black"
