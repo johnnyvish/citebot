@@ -27,7 +27,6 @@ export default function Home() {
     },
   ]);
 
-  const [counter, setCounter] = useState(0);
   const chatboxRef = useRef(null);
 
   async function promptGPT(text) {
