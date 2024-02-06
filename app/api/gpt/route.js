@@ -36,6 +36,23 @@ async function postToGptApi(inputText) {
   return response.choices[0].message.content;
 }
 
+async function postToGptApi(highlights, inputText) {
+  const promptText = `You are an AI trained in medical research analysis. Based on the following research highlights related to "${inputText}", provide a summary of the key findings and propose potential solutions or recommendations. Ensure your response includes an introduction, key highlights, and a conclusion with potential solutions.
+  
+  Highlights:
+  ${highlights}
+  
+  Summarize these findings and suggest potential solutions:`;
+
+  const response = await openai.chat.completions.create({
+    model: "gpt-4",
+    messages: [
+      { role: "system", content: promptText },
+      { role: "user", content: inputText },
+    ],
+  });
+}
+
 // The main POST handler for the Next.js API route
 export async function POST(request) {
   try {
@@ -59,10 +76,8 @@ export async function POST(request) {
       })
       .join("\n");
 
-    const promptText = `Based on the following research highlights for the question \n${inputText}\n\n: : \n${highlights}\n\nProvide a summary and potential solution.`;
-
     // Now post the processed highlights to GPT API
-    const outputText = await postToGptApi(promptText);
+    const outputText = await postToGptApi(highlights, inputText);
 
     return NextResponse.json({ result: outputText }, { status: 200 });
   } catch (error) {
