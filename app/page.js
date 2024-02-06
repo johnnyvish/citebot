@@ -87,7 +87,7 @@ export default function Home() {
       />
       <div
         ref={chatboxRef}
-        className="flex flex-col justify-start items-start bg-[#d1c59f] h-[520px] w-[75%] mt-4 rounded-2xl overflow-auto p-4"
+        className="flex flex-col justify-start items-start bg-[#d1c59f] h-[520px] w-[85%] mt-4 rounded-2xl overflow-auto p-4"
       >
         {messages.map((msg, index) => (
           <div key={index} className="text-left w-full mb-2 text-black">
@@ -115,7 +115,7 @@ export default function Home() {
       <form className="w-full flex justify-center mt-8" onSubmit={sendMessage}>
         <textarea
           id="userMessage"
-          className="bg-[#d1c59f] h-[140px] w-[50%] rounded-2xl p-4 placeholder-black"
+          className="bg-[#d1c59f] h-[140px] w-[65%] rounded-2xl p-4 placeholder-black"
           placeholder="Write a message..."
           value={userMessage}
           onChange={(e) => setUserMessage(e.target.value)}
@@ -124,7 +124,7 @@ export default function Home() {
           type="submit"
           className="ml-2 text-black text-[2.5rem] font-bold py-2 px-4 rounded-2xl"
         >
-          ^
+          ^ <br />{" "}
         </button>
       </form>
     </main>
