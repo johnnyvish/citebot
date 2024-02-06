@@ -6,6 +6,8 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+export const maxDuration = 120;
+
 async function fetchExaApiData(text) {
   const exa = new Exa(process.env.EXA_API_KEY);
 
@@ -20,7 +22,7 @@ async function fetchExaApiData(text) {
         "bmj.com",
         "sciencedirect.com",
       ],
-      highlights: { num_sentences: 4, highlights_per_url: 2 },
+      highlights: { num_sentences: 7, highlights_per_url: 2 },
     });
 
     return res;
@@ -42,7 +44,7 @@ async function postToGptApi(results, inputText) {
   console.log("gpt reached");
 
   const response = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
+    model: "gpt-4-0125-preview",
     messages: [
       { role: "system", content: promptText },
       {
