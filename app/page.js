@@ -22,7 +22,7 @@ export default function Home() {
     {
       sender: "CITE-BOT",
       message:
-        "Hi, I am Citebot. Ask me any medical questions and I’ll try to answer them with citations.",
+        "Hi, I am Citebot. Ask me medical questions and I’ll try to answer them with citations.",
       animation: false,
     },
   ]);
