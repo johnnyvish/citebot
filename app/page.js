@@ -51,15 +51,15 @@ export default function Home() {
         const data = await response.json();
 
         // Check if the response contains a pattern `<<some message>>` and ensure depth is less than 1
-        // const pattern = /<<(.+?)>>/;
-        // const match = pattern.exec(data.result);
+        const pattern = /<<(.+?)>>/;
+        const match = pattern.exec(data.result);
 
-        // console.log("match" + match);
+        console.log("match" + match);
 
-        // if (match && depth < 1) {
-        //   // Extract the message within `<< >>` and send it as a new query with incremented depth
-        //   const newQuery = match[1];
-        //   promptGPT(newQuery, depth + 1);
+        if (match && depth < 1) {
+          // Extract the message within `<< >>` and send it as a new query with incremented depth
+          const newQuery = match[1];
+          // promptGPT(newQuery, depth + 1);
         } else {
           // Update the UI with the API response
           setTimeout(() => {
