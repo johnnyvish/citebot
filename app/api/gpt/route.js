@@ -1,12 +1,15 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
 import Exa from "exa-js";
+import connectDB from "@/lib/mongodb";
+import Generation from "@/models/generation";
+
+export const dynamic = "force-dynamic";
+export const maxDuration = 120;
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-
-export const maxDuration = 120;
 
 async function fetchExaApiData(text) {
   const exa = new Exa(process.env.EXA_API_KEY);
@@ -23,7 +26,6 @@ async function fetchExaApiData(text) {
       ],
       highlights: { num_sentences: 10, highlights_per_url: 10 },
     });
-
     return res;
   } catch (error) {
     console.error("Error fetching data from Exa API:", error);
@@ -90,6 +92,15 @@ export async function POST(request) {
     const outputText = await postToGptApi(results, inputText);
 
     console.log(outputText);
+
+    await connectDB();
+
+    let generation = new Generation({
+      inputText,
+      outputText,
+    });
+
+    await generation.save();
 
     return NextResponse.json({ result: outputText }, { status: 200 });
   } catch (error) {
