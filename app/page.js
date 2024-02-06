@@ -52,7 +52,7 @@ export default function Home() {
             ),
             { sender: "CITE-BOT", message: data.result, animation: false },
           ]);
-        }, 5000); // Adjust this to change the delay as needed
+        }, 1000); // Adjust this to change the delay as needed
       } else {
         throw new Error(`Request failed with status ${response.status}`);
       }
