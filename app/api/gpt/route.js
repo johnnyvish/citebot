@@ -23,19 +23,6 @@ async function fetchExaApiData(text) {
   }
 }
 
-// Function to post text to the GPT API and receive a response
-async function postToGptApi(inputText) {
-  const response = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
-    messages: [
-      { role: "system", content: "You are a helpful assistant." },
-      { role: "user", content: inputText },
-    ],
-  });
-
-  return response.choices[0].message.content;
-}
-
 async function postToGptApi(highlights, inputText) {
   const promptText = `You are an AI trained in medical research analysis. Based on the following research highlights related to "${inputText}", provide a summary of the key findings and propose potential solutions or recommendations. Ensure your response includes an introduction, key highlights, and a conclusion with potential solutions. Include direct references to the article names and information.
   
