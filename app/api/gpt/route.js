@@ -10,7 +10,6 @@ export const maxDuration = 120;
 
 async function fetchExaApiData(text) {
   const exa = new Exa(process.env.EXA_API_KEY);
-
   try {
     const res = await exa.searchAndContents(text, {
       numResults: 10,
@@ -22,7 +21,7 @@ async function fetchExaApiData(text) {
         "bmj.com",
         "sciencedirect.com",
       ],
-      highlights: { num_sentences: 7, highlights_per_url: 4 },
+      highlights: { num_sentences: 10, highlights_per_url: 10 },
     });
 
     return res;
