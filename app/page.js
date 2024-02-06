@@ -121,7 +121,10 @@ export default function Home() {
           </div>
         ))}
       </div>
-      <form className="w-full flex justify-center mt-8" onSubmit={sendMessage}>
+      <form
+        className="w-full flex justify-center mt-8 shadow-2xl"
+        onSubmit={sendMessage}
+      >
         <textarea
           id="userMessage"
           className="bg-[#d1c59f] h-[140px] w-[540px] rounded-2xl p-4 placeholder-black"
