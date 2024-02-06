@@ -22,7 +22,7 @@ async function fetchExaApiData(text) {
         "bmj.com",
         "sciencedirect.com",
       ],
-      highlights: { num_sentences: 7, highlights_per_url: 2 },
+      highlights: { num_sentences: 7, highlights_per_url: 4 },
     });
 
     return res;
