@@ -37,7 +37,7 @@ async function postToGptApi(inputText) {
 }
 
 async function postToGptApi(highlights, inputText) {
-  const promptText = `You are an AI trained in medical research analysis. Based on the following research highlights related to "${inputText}", provide a summary of the key findings and propose potential solutions or recommendations. Ensure your response includes an introduction, key highlights, and a conclusion with potential solutions.
+  const promptText = `You are an AI trained in medical research analysis. Based on the following research highlights related to "${inputText}", provide a summary of the key findings and propose potential solutions or recommendations. Ensure your response includes an introduction, key highlights, and a conclusion with potential solutions. Include direct references to the article names and information.
   
   Highlights:
   ${highlights}
