@@ -45,7 +45,7 @@ async function postToGptApi(results, inputText) {
   console.log("gpt reached");
 
   const response = await openai.chat.completions.create({
-    model: "gpt-4-0125-preview",
+    model: "gpt-4-turbo",
     messages: [
       { role: "system", content: promptText },
       {
